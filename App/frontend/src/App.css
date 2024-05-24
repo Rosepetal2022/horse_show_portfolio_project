@@ -1,10 +1,32 @@
-html {
+.table-padding {
+  padding: 2em 2em 2em;
+}
+
+
+.form-background {
+  background: lightgrey;
+  padding: 2%;
+}
+
+.form-padding {
+  padding: 2%;
+}
+
+.form-size {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 40%;
+  margin: 2em 2em 2em;
+}
+
+h2 {
   text-align: center;
 }
 
-html li {
-  list-style-type: none;
+h1 {
+  text-align: center;
+}
+
+p {
+  padding: 10%;
+  font-size: 1.25rem;
 }

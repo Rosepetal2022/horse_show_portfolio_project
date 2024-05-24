@@ -1,121 +1,132 @@
--- Disable foreign key checks temporarily
-SET
-    foreign_key_checks = 0;
+SET FOREIGN_KEY_CHECKS=0;
+SET AUTOCOMMIT = 0;
 
--- Planets table
-DROP TABLE IF EXISTS `bsg_planets`;
+DROP TABLE IF EXISTS Horses;
+DROP TABLE IF EXISTS Owners;
+DROP TABLE IF EXISTS HorsesAndRiders;
+DROP TABLE IF EXISTS Riders;
+DROP TABLE IF EXISTS HorseShows;
+DROP TABLE IF EXISTS HorsesEntered;
 
-CREATE TABLE `bsg_planets` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(255) NOT NULL,
-    `population` BIGINT(20) DEFAULT NULL,
-    `language` VARCHAR(255) DEFAULT NULL,
-    `capital` VARCHAR(255) DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `name` (`name`)
+CREATE OR REPLACE TABLE Owners(
+    OwnerID Int(11) NOT NULL AUTO_INCREMENT UNIQUE,
+    FirstName Varchar(255) NOT NULL, 
+    LastName Varchar(255) NOT NULL,
+    Email Varchar(255) NOT NULL,
+    Address Varchar(255) NOT NULL,
+    PRIMARY KEY (OwnerID)
 );
 
-INSERT INTO
-    `bsg_planets` (
-        `id`,
-        `name`,
-        `population`,
-        `language`,
-        `capital`
-    )
-VALUES
-    (
-        1,
-        'Gemenon',
-        2800000000,
-        'Old Gemenese',
-        'Oranu'
-    ),
-    (2, 'Leonis', 2600000000, 'Leonese', 'Luminere'),
-    (
-        3,
-        'Caprica',
-        4900000000,
-        'Caprican',
-        'Caprica City'
-    ),
-    (7, 'Sagittaron', 1700000000, NULL, 'Tawa'),
-    (16, 'Aquaria', 25000, NULL, NULL),
-    (17, 'Canceron', 6700000000, NULL, 'Hades'),
-    (18, 'Libran', 2100000, NULL, NULL),
-    (19, 'Picon', 1400000000, NULL, 'Queestown'),
-    (20, 'Scorpia', 450000000, NULL, 'Celeste'),
-    (21, 'Tauron', 2500000000, 'Tauron', 'Hypatia'),
-    (22, 'Virgon', 4300000000, NULL, 'Boskirk');
-
--- Certification table
-DROP TABLE IF EXISTS `bsg_cert`;
-
-CREATE TABLE `bsg_cert` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `title` VARCHAR(255) NOT NULL,
-    PRIMARY KEY (`id`)
+CREATE OR REPLACE TABLE Riders(
+    RiderID Int(11) NOT NULL AUTO_INCREMENT UNIQUE,
+    FirstName Varchar(255) NOT NULL,
+    LastName Varchar(255) NOT NULL,
+    Email Varchar(255) NOT NULL,
+    Address Varchar(255) NOT NULL
 );
 
-INSERT INTO
-    `bsg_cert` (`id`, `title`)
-VALUES
-    (1, 'Raptor'),
-    (2, 'Viper'),
-    (3, 'Mechanic'),
-    (4, 'Command');
-
--- People table
-DROP TABLE IF EXISTS `bsg_people`;
-
-CREATE TABLE `bsg_people` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `fname` VARCHAR(255) NOT NULL,
-    `lname` VARCHAR(255) DEFAULT NULL,
-    `homeworld` INT(11) DEFAULT NULL,
-    `age` INT(11) DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    KEY `homeworld` (`homeworld`),
-    CONSTRAINT `bsg_people_ibfk_1` FOREIGN KEY (`homeworld`) REFERENCES `bsg_planets` (`id`) ON DELETE
-    SET
-        NULL ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 DEFAULT CHARSET = latin1;
-
-INSERT INTO
-    `bsg_people` (`id`, `fname`, `lname`, `homeworld`, `age`)
-VALUES
-    (1, 'William', 'Adama', 3, 61),
-    (2, 'Lee', 'Adama', 3, 30),
-    (3, 'Laura', 'Roslin', 3, NULL),
-    (4, 'Kara', 'Thrace', 3, NULL),
-    (5, 'Gaius', 'Baltar', 3, NULL),
-    (6, 'Saul', 'Tigh', NULL, 71),
-    (7, 'Karl', 'Agathon', 1, NULL),
-    (8, 'Galen', 'Tyrol', 1, 32),
-    (9, 'Callandra', 'Henderson', NULL, NULL);
-
--- Certification-People relationship table
-CREATE TABLE `bsg_cert_people` (
-    `cid` INT(11) NOT NULL DEFAULT '0',
-    `pid` INT(11) NOT NULL DEFAULT '0',
-    PRIMARY KEY (`cid`, `pid`),
-    KEY `pid` (`pid`),
-    CONSTRAINT `bsg_cert_people_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `bsg_cert` (`id`),
-    CONSTRAINT `bsg_cert_people_ibfk_2` FOREIGN KEY (`pid`) REFERENCES `bsg_people` (`id`)
+CREATE OR REPLACE TABLE Horses(
+    HorseID Int(11) NOT NULL AUTO_INCREMENT UNIQUE,
+    OwnerID Int,
+    ShowName Varchar(255) NOT NULL,
+    Breed Varchar(255) NOT NULL,
+    Age Int NOT NULL,
+    Discipline Varchar(255) NOT NULL,
+    PrizeMoneyWon Int DEFAULT 0,
+    PRIMARY KEY (HorseID),
+    FOREIGN KEY (OwnerID) REFERENCES Owners(OwnerID) ON DELETE CASCADE
 );
 
-INSERT INTO
-    `bsg_cert_people` (`cid`, `pid`)
-VALUES
-    (2, 2),
-    (4, 2),
-    (4, 3),
-    (2, 4),
-    (4, 6),
-    (1, 7),
-    (3, 8),
-    (3, 9);
+CREATE OR REPLACE TABLE HorsesAndRiders(
+    HAndRID Int(11) NOT NULL AUTO_INCREMENT UNIQUE,
+    RiderID Int NOT NULL,
+    HorseID Int NOT NULL,
+    PRIMARY KEY (HAndRID),
+    FOREIGN KEY (HorseID) REFERENCES Horses(HorseID) ON DELETE CASCADE,
+    FOREIGN KEY (RiderID) REFERENCES Riders(RiderID) ON DELETE CASCADE
+);
 
--- Re-enable foreign key checks
-SET
-    foreign_key_checks = 1;
+CREATE OR REPLACE TABLE HorseShows(
+    HorseShowID Int(11) NOT NULL AUTO_INCREMENT UNIQUE,
+    HorseShowName Varchar(255) NOT NULL,
+    ShowDate Date NOT NULL,
+    Location Varchar(255) NOT NULL,
+    PrizeMoneyOffered Int(11) NOT NULL,
+    NumEnteredHorse Int(11) NOT NULL,
+    PRIMARY KEY (HorseShowID)
+);
+
+CREATE OR REPLACE TABLE Betters(
+    BetterID Int(11) NOT NULL AUTO_INCREMENT UNIQUE,
+    BetterAmount Int NOT NULL,
+    FirstName Varchar(255) NOT NULL,
+    LastName Varchar(255) NOT NULL,
+    PRIMARY KEY (BetterID)
+);
+
+CREATE OR REPLACE TABLE Bets(
+    BetID Int(11) NOT NULL AUTO_INCREMENT UNIQUE,
+    BetterID Int NOT NULL,
+    HorseShowID Int NOT NULL,
+    HorseID Int NOT NULL,
+    PRIMARY KEY (BetID),
+    FOREIGN KEY (BetterID) REFERENCES Betters(BetterID) ON DELETE CASCADE,
+    FOREIGN KEY (HorseShowID) REFERENCES HorseShows(HorseShowID) ON DELETE CASCADE,
+    FOREIGN KEY (HorseID) REFERENCES Horses(HorseID) ON DELETE CASCADE
+);
+
+
+INSERT INTO Owners (FirstName, LastName, Email, Address)
+VALUES ('Josephine', 'Darakjy', 'josephine_darakjy@darakjy.org', '4 B Blue Ridge Blvd Brighton Livingston MI'),
+        ('Art', 'Venere', 'art@venere.org',	'8 W Cerritos Ave 54 Bridgeport Gloucester	NJ'),
+        ('Lenna', 'Paprocki', 'lpaprocki@hotmail.com', '639 Main St	Anchorage Anchorage	AK'),
+        ('Donette',	'Foller', 'donette.foller@cox.net', '34 Center St Hamilton Butler OH'),
+        ('Simona', 'Morasca', 'simona@morasca.com', '3 Mcauley Dr Ashland OH');
+
+INSERT INTO Riders (FirstName, LastName, Email, Address)
+VALUES ('Myra',	'Munns', 'mmunns@cox.net', '461 Prospect Pl #316 Euless	Tarrant	TX'),
+('Stephaine', 'Barfield', 'stephaine@barfield.com',	'47154 Whipple Ave Nw Gardena Los Angeles CA'),
+('Lai', 'Gato', 'lai.gato@gato.org','37 Alabama Ave	Evanston Cook IL'),
+('Stephen', 'Emigh', 'stephen_emigh@hotmail.com', '3777 E Richmond St #900 Akron Summit	OH'),
+('Tyra', 'Shields', 'tshields@gmail.com', '3 Fort Worth Ave Philadelphia PA'),
+('Cory', 'Gibes', 'cory.gibes@gmail.com', '83649 W Belmont Ave San Gabriel Los Angeles CA');
+
+INSERT INTO Horses (OwnerID, ShowName, Breed, Age, Discipline, PrizeMoneyWon)
+VALUES  (1, 'Delegate', 'Westphalian', 10, 'Jumper', 2500),
+        (1, 'Romina', 'Hanovarian', 8, 'Hunter', 3000),
+        (2, 'Anastasia', 'Selle Francais', 15, 'Equitation', 0),
+        (3, 'Per Se', 'Dutch Warmblood', 22, 'Hunter', 0),
+        (4, 'Bohemio Z', 'Zangersheide', 6, 'Jumper', 8000),
+        (5, 'Paradigm', 'American Warmblood', 12, 'Hunter', 5000);
+
+
+INSERT INTO HorsesAndRiders (RiderID, HorseID)
+VALUES (2, 1), (5, 2), (4, 5), (6, 6);
+
+
+INSERT INTO HorseShows (HorseShowName, ShowDate, Location, PrizeMoneyOffered, NumEnteredHorse)
+VALUES ('Early Summer Classic', '2024-06-15', 'Portland, OR', 20000, 200),
+    ('Oregon Trail', '2024-06-22', 'Bellevue, WA', 20000, 250),
+    ('Willamette Classic', '2024-07-06', 'Del Mar, CA', 20000, 400),
+    ('Country Classic', '2024-07-13', 'Sonoma, CA', 20000, 300),
+    ('Oregon Summer Classic', '2024-08-17', 'Bend, OR', 20000, 250),
+    ('Northwest Spectacular', '2024-08-24', 'Monroe, WA', 20000, 100);
+
+
+
+INSERT INTO Betters (BetterAmount, FirstName, LastName)
+VALUES (100, 'Natalie', 'Fern'),
+    (500, 'Lisha', 'Centini'),
+    (25, 'Arlene', 'Klusman'),
+    (300, 'Alease', 'Buemi');
+
+INSERT INTO Bets (BetterID, HorseShowID, HorseID)
+VALUES
+    (1, 30, 10),
+    (2, 34, 12),
+    (2, 31, 13),
+    (3, 35, 14);
+
+
+SET FOREIGN_KEY_CHECKS=1;
+COMMIT;
