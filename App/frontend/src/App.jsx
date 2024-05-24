@@ -18,7 +18,7 @@ function App() {
     <main>
         <section>
             <Routes> 
-                <Route path="/horse_show_database" element={<Home />} />
+                <Route path="/" element={<Home />} />
                 <Route path="/horses" element={<Horse />} />
                 <Route path="/riders" element={<Riders />} />
                 <Route path="/betters" element={<Betters />} />

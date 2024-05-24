@@ -1,36 +1,40 @@
 // import { horse_data } from '../utils/sampleData';
+
 import { FaDeleteLeft } from "react-icons/fa6";
 import axios from "axios"
 import { useEffect, useState } from 'react';
 
 
+
 function Horse() {
-  // useState hook to initialize the diagnosticData state variable to store the fetched data
-  const [horseData, setHorseData] = useState([]);
+      // useState hook to initialize the diagnosticData state variable to store the fetched data
+      const [horseData, setHorseData] = useState([]);
 
-  // Define a function to fetch diagnostic data from the API
-  const fetchHorseData = async () => {
-    try {
-      // Construct the URL for the API call
-      const URL = import.meta.env.VITE_API_URL + 'horses';
-      console.log(URL)
-      // Use Axios to make the GET request
-      const response = await axios.get(URL);
-      console.log("data log from home", response)
-      // Update state with the response data
-      setHorseData(response.data);
-    } catch (error) {
-      // Handle any errors that occur during the fetch operation
-      console.error('Error fetching diagnostic data:', error);
-      alert('Error fetching diagnostic data from the server.');
-    }
-  };
-
-  // useEffect hook to trigger the fetchDiagnosticData function when the component mounts
-  useEffect(() => {
-    fetchHorseData();
-  }, []);
-
+      // Define a function to fetch diagnostic data from the API
+      const fetchHorseData = async () => {
+        try {
+          // Construct the URL for the API call
+          const URL = import.meta.env.VITE_API_URL + 'horses';
+          console.log(URL)
+          // Use Axios to make the GET request
+          const response = await axios.get(URL);
+          console.log("data log from home", response)
+          // Update state with the response data
+          setHorseData(response.data);
+        } catch (error) {
+          // Handle any errors that occur during the fetch operation
+          console.error('Error fetching diagnostic data:', error);
+          alert('Error fetching diagnostic data from the server.');
+        }
+      };
+    
+      // useEffect hook to trigger the fetchDiagnosticData function when the component mounts
+      useEffect(() => {
+        fetchHorseData();
+      }, []);
+    
+   
+      
   return (
     <>
     <h2>Add/Edit/Delete Horses</h2>

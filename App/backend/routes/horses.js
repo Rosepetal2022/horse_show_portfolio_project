@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getHorses
+  getHorses,
+  
 } = require("../controllers/horseController");
 
 router.get("/", getHorses);
