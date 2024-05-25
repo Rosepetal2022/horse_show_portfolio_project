@@ -58,7 +58,7 @@ function Owner() {
         const address = event.target.elements.address.value;
     
         // Make PUT request to update owner
-        axios.put(`http://classwork.engr.oregonstate.edu:3788/api/owners/${ownerId}`, { OwnerID: ownerId, FirstName: firstName, LastName: lastName, Email: email, Address: address })
+        axios.put(`http://classwork.engr.oregonstate.edu:3788/owners/${ownerId}`, { OwnerID: ownerId, FirstName: firstName, LastName: lastName, Email: email, Address: address })
             .then(res => {
                 console.log(res);
                 // Optionally, handle success (e.g., display a success message)
@@ -71,7 +71,7 @@ function Owner() {
 
     const ownerDelete = async (ownerId) => {
         try {
-          const response = await axios.delete(`http://classwork.engr.oregonstate.edu:3788/api/owners/${ownerId}`);
+          const response = await axios.delete(`http://classwork.engr.oregonstate.edu:3788/owners/${ownerId}`);
           console.log('Owner deleted successfully');
           window.location.reload()
           // Handle success

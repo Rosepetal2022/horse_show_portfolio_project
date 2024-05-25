@@ -25,8 +25,8 @@ app.use(express.json());
 // End Connect DB Activity Code.
 // Match to your database config route
 // const db = require('./database/config.js');
-app.use('/api/horses', require("./routes/horses"));
-app.use('/api/owners', require("./routes/owners"))
+app.use('/horses', require("./routes/horses"));
+app.use('/owners', require("./routes/owners"))
 
 app.listen(PORT, () => {
   // Change this text to whatever FLIP server you're on
