@@ -8,12 +8,13 @@ import { useEffect, useState } from 'react';
 function Owner() {
      // useState hook to initialize the diagnosticData state variable to store the fetched data
      const [ownerData, setOwnerData] = useState([]);
+     
 
      // Define a function to fetch diagnostic data from the API
      const fetchOwnerData = async () => {
        try {
          // Construct the URL for the API call
-         const URL = import.meta.env.VITE_API_URL + 'owners';
+         const URL = 'http://classwork.engr.oregonstate.edu:9875/owners';
          console.log(URL)
          // Use Axios to make the GET request
          const response = await axios.get(URL);
@@ -22,8 +23,8 @@ function Owner() {
          setOwnerData(response.data);
        } catch (error) {
          // Handle any errors that occur during the fetch operation
-         console.error('Error fetching diagnostic data:', error);
-         alert('Error fetching diagnostic data from the server.');
+         console.error('Error fetching owner data:', error);
+         alert('Error fetching  data from the server.');
        }
      };
    
@@ -41,7 +42,7 @@ function Owner() {
 
     function ownerSubmit(event){
         event.preventDefault();
-        axios.post(import.meta.env.VITE_API_URL + 'owners', {FirstName, LastName, Email, Address})
+         axios.post('http://classwork.engr.oregonstate.edu:9875/owners', {FirstName, LastName, Email, Address})
         .then(res => {
             console.log(res)
             window.location.reload()
@@ -50,6 +51,7 @@ function Owner() {
 
     function ownerUpdate(event, ownerId) {
         event.preventDefault();
+        console.log(ownerId)
         
         // Gather form data
         const firstName = event.target.elements.firstName.value;
@@ -58,7 +60,7 @@ function Owner() {
         const address = event.target.elements.address.value;
     
         // Make PUT request to update owner
-        axios.put(`http://classwork.engr.oregonstate.edu:3788/owners/${ownerId}`, { OwnerID: ownerId, FirstName: firstName, LastName: lastName, Email: email, Address: address })
+        axios.put(`http://classwork.engr.oregonstate.edu:9875/owners/${ownerId}`, { OwnerID: ownerId, FirstName: firstName, LastName: lastName, Email: email, Address: address })
             .then(res => {
                 console.log(res);
                 // Optionally, handle success (e.g., display a success message)
@@ -69,12 +71,18 @@ function Owner() {
             });
     }
 
-    const ownerDelete = async (ownerId) => {
+    const ownerDelete = async (OwnerID) => {
+        console.log(OwnerID)
         try {
-          const response = await axios.delete(`http://classwork.engr.oregonstate.edu:3788/owners/${ownerId}`);
-          console.log('Owner deleted successfully');
-          window.location.reload()
+        const URL = 'http://classwork.engr.oregonstate.edu:9875/owners/' + OwnerID;
+        console.log(URL)
+        const response = await axios.delete(URL);
+          
           // Handle success
+        if (response.status === 204) {
+            alert("Owner deleted successfully");
+            window.location.reload()
+        }
         } catch (error) {
           console.error('Error deleting owner:', error);
           // Handle error
@@ -107,7 +115,7 @@ function Owner() {
             <tbody>
                 {ownerData.map((data, index) => (
                     <tr key={index}>
-                        <th scope="row">{index + 1}</th>
+                        <th scope="row">{data.OwnerID}</th>
                         <td>{data.FirstName}</td>
                         <td>{data.LastName}</td>
                         <td>{data.Email}</td>

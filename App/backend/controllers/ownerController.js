@@ -42,58 +42,68 @@ const createOwner = async (req, res) => {
     }
   };
 
+  
   const updateOwner = async (req, res) => {
-    // Get the person ID
+    // Get the OwnerID from the request parameters
     const OwnerID = req.params.id;
-    // Get the person object
+    // Get the new owner data from the request body
     const newOwner = req.body;
   
     try {
-      const [data] = await db.query("SELECT * FROM Owners WHERE OwnerID = ?", [
-        OwnerID,
-      ]);
-      console.log(OwnerID)
+      // Fetch the current owner data from the database
+      const [data] = await db.query("SELECT * FROM Owners WHERE OwnerID = ?", [OwnerID]);
+      console.log('OwnerID:', OwnerID);
+  
+      if (data.length === 0) {
+        return res.status(404).json({ message: "Owner not found" });
+      }
   
       const oldOwner = data[0];
+      console.log('Old Owner:', oldOwner);
+      console.log('New Owner:', newOwner);
   
-      // If any attributes are not equal, perform update
+      // If any attributes are not equal, perform the update
       if (!lodash.isEqual(newOwner, oldOwner)) {
-        const query =
-          "UPDATE Owners SET FirstName=?, LastName=?, Email=?, Address=? WHERE OwnerID = ?";
+        const query = "UPDATE Owners SET FirstName=?, LastName=?, Email=?, Address=? WHERE OwnerID = ?";
   
         const values = [
           newOwner.FirstName,
           newOwner.LastName,
           newOwner.Email,
           newOwner.Address,
+          OwnerID  // Add the OwnerID here
         ];
   
         // Perform the update
-        await db.query(query, values);
-        // Inform client of success and return 
-        return res.json({ message: "Person updated successfully." });
+        const [result] = await db.query(query, values);
+        console.log('Update result:', result);
+  
+        if (result.affectedRows === 0) {
+          return res.status(400).json({ message: "Update failed" });
+        }
+  
+        // Inform the client of success
+        return res.json({ message: "Owner updated successfully." });
       }
   
-      res.json({ message: "Person details are the same, no update" });
+      // Inform the client that no update was necessary
+      res.json({ message: "Owner details are the same, no update needed." });
     } catch (error) {
-      console.log("Error updating person", error);
-      res
-        .status(500)
-        .json({ error: `Error updating the person with id ${OwnerID}` });
+      console.log("Error updating owner", error);
+      res.status(500).json({ error: `Error updating the owner with id ${OwnerID}` });
     }
   };
   
   const deleteOwner = async (req, res) => {
-    console.log("Deleting owner with id:", req.params.id);
-    const OwnerID = req.params.id;
-    console.log("inside delete", OwnerID)
+    const OwnerID = req.params.OwnerID;
+    
     try {
       // Ensure the person exitst
       const [isExisting] = await db.query(
         "SELECT 1 FROM Owners WHERE OwnerID = ?",
         [OwnerID]
       );
-      console.log(OwnerID)
+      
       // If the person doesn't exist, return an error
       if (isExisting.length === 0) {
         return res.status(404).send("Person not found");
@@ -101,9 +111,11 @@ const createOwner = async (req, res) => {
   
     // Delete the person from bsg_people
       await db.query("DELETE FROM Owners WHERE OwnerID = ?", [OwnerID]);
+      
   
       // Return the appropriate status code
       res.status(204).json({ message: "Owner deleted successfully" })
+      console.log("inside delete", OwnerID)
     } catch (error) {
       console.error("Error deleting Owner from the database:", error);
       res.status(500).json({ error: error.message });
