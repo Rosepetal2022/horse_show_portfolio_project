@@ -1,8 +1,36 @@
-import { horseAndRider_data } from '../utils/sampleData';
-
+import { FaDeleteLeft } from "react-icons/fa6";
+import axios from "axios"
+import { useEffect, useState } from 'react';
 
 
 function HorseAndRiders() {
+        // useState hook to initialize the diagnosticData state variable to store the fetched data
+        const [horseAndRiderData, setHorseAndRiderData] = useState([]);
+  
+        // Define a function to fetch diagnostic data from the API
+        const fetchHorseData = async () => {
+          try {
+            // Construct the URL for the API call
+            const URL = import.meta.env.VITE_API_URL + 'horseAndRiders';
+            console.log(URL)
+            // Use Axios to make the GET request
+            const response = await axios.get(URL);
+            console.log("data log from home", response)
+            // Update state with the response data
+            setHorseAndRiderData(response.data);
+          } catch (error) {
+            // Handle any errors that occur during the fetch operation
+            console.error('Error fetching diagnostic data:', error);
+            alert('Error fetching diagnostic data from the server.');
+          }
+        };
+      
+        // useEffect hook to trigger the fetchDiagnosticData function when the component mounts
+        useEffect(() => {
+          fetchHorseData();
+        }, []);
+      
+
     return (
         <>
         <h2>Horses and Riders</h2>
@@ -11,16 +39,16 @@ function HorseAndRiders() {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Horse</th>
-                        <th scope="col">Rider</th>
+                        <th scope="col">HorseAndRiderID</th>
+                        <th scope="col">RiderID</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {horseAndRider_data.map((horseAndRider, index) => (
+                    {horseAndRiderData.map((horseAndRider, index) => (
                         <tr key={index}>
                             <th scope="row">{index + 1}</th>
-                            <td>{horseAndRider.horse}</td>
-                            <td>{horseAndRider.RfirstName} {horseAndRider.RlastName}</td>
+                            <td>{horseAndRider.HAndRID}</td>
+                            <td>{horseAndRider.RiderID} {horseAndRider.RlastName}</td>
                         </tr>
                     ))}
                 </tbody>

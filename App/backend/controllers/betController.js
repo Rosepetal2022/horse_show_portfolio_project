@@ -3,10 +3,10 @@ const db = require("../../../../../App/backend/database/config");
 const dotenv = require("dotenv").config();
 // Load .env variables
 
-const getHorses = async (req, res) => {
+const getBets = async (req, res) => {
     try {
       // Select all rows from the "bsg_people" table
-      const query = "SELECT * FROM Horses";
+      const query = "SELECT * FROM Bets";
       // Execute the query using the "db" object from the configuration file
       const [rows] = await db.query(query);
       console.log(rows)
@@ -19,5 +19,5 @@ const getHorses = async (req, res) => {
   };
 // Export the functions as methods of an object
 module.exports = {
-    getHorses
+    getBets
   };

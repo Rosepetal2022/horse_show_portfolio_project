@@ -26,9 +26,14 @@ app.use(express.json());
 // Match to your database config route
 // const db = require('./database/config.js');
 app.use('/horses', require("./routes/horses"));
-app.use('/owners', require("./routes/owners"))
+app.use('/owners', require("./routes/owners"));
+app.use('/riders', require('./routes/riders'));
+app.use('/betters', require("./routes/betters"));
+app.use('/horseShows', require("./routes/horseShows"));
+app.use('/horseAndRiders', require("./routes/horseAndRiders"));
+app.use('/bets', require('./routes/bets'))
 
 app.listen(PORT, () => {
   // Change this text to whatever FLIP server you're on
-  console.log(`Server running:  http://classwork.engr.oregonstate.edu:${PORT}...`);
+  console.log(`Server running:  http://flip2.engr.oregonstate.edu:${PORT}...`);
 });

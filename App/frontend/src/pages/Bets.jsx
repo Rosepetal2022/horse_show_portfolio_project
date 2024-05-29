@@ -1,7 +1,34 @@
 import { bets_data } from '../utils/sampleData';
-
+import axios from "axios"
+import { useEffect, useState } from 'react';
 
 function Bets(){
+          // useState hook to initialize the diagnosticData state variable to store the fetched data
+          const [betData, setBetData] = useState([]);
+
+          // Define a function to fetch diagnostic data from the API
+          const fetchHorseData = async () => {
+            try {
+              // Construct the URL for the API call
+              const URL = import.meta.env.VITE_API_URL + 'bets';
+              console.log(URL)
+              // Use Axios to make the GET request
+              const response = await axios.get(URL);
+              console.log("data log from home", response)
+              // Update state with the response data
+              setBetData(response.data);
+            } catch (error) {
+              // Handle any errors that occur during the fetch operation
+              console.error('Error fetching diagnostic data:', error);
+              alert('Error fetching diagnostic data from the server.');
+            }
+          };
+        
+          // useEffect hook to trigger the fetchDiagnosticData function when the component mounts
+          useEffect(() => {
+            fetchHorseData();
+          }, []);
+
     return (
         <>
         <h2>Bets Placed</h2>
@@ -16,12 +43,12 @@ function Bets(){
                     </tr>
                 </thead>
                 <tbody>
-                    {bets_data.map((bet, index) => (
+                    {betData.map((bet, index) => (
                         <tr key={index}>
                             <th scope="row">{index + 1}</th>
-                            <td>{bet.firstName} {bet.lastName}</td>
-                            <td>{bet.horseShow}</td>
-                            <td>{bet.horse}</td>
+                            <td>{bet.BetID} {bet.lastName}</td>
+                            <td>{bet.HorseShowID}</td>
+                            <td>{bet.HorseID}</td>
                         </tr>
                     ))}
                 </tbody>

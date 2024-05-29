@@ -1,5 +1,5 @@
 // Load db config
-const db = require("../database/config");
+const db = require("../../../../../App/backend/database/config");
 const dotenv = require("dotenv").config();
 // Load .env variables
 const lodash = require("lodash");

@@ -1,8 +1,36 @@
 import { betters_data } from '../utils/sampleData';
 import { FaEdit } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
+import axios from "axios"
+import { useEffect, useState } from 'react';
 
 function Betters() {
+          // useState hook to initialize the diagnosticData state variable to store the fetched data
+          const [betterData, setBetterData] = useState([]);
+
+          // Define a function to fetch diagnostic data from the API
+          const fetchHorseData = async () => {
+            try {
+              // Construct the URL for the API call
+              const URL = import.meta.env.VITE_API_URL + 'betters';
+              console.log(URL)
+              // Use Axios to make the GET request
+              const response = await axios.get(URL);
+              console.log("data log from home", response)
+              // Update state with the response data
+              setBetterData(response.data);
+            } catch (error) {
+              // Handle any errors that occur during the fetch operation
+              console.error('Error fetching diagnostic data:', error);
+              alert('Error fetching diagnostic data from the server.');
+            }
+          };
+        
+          // useEffect hook to trigger the fetchDiagnosticData function when the component mounts
+          useEffect(() => {
+            fetchHorseData();
+          }, []);
+
     return (
         <>
         <h2>Add/Edit/Delete Betters</h2>
@@ -19,12 +47,12 @@ function Betters() {
                     </tr>
                 </thead>
                 <tbody>
-                    {betters_data.map((better, index) => (
+                    {betterData.map((better, index) => (
                         <tr key={index}>
                             <th scope="row">{index + 1}</th>
-                            <td>{better.amount}</td>
-                            <td>{better.firstName}</td>
-                            <td>{better.lastName}</td>
+                            <td>{better.BetterAmount}</td>
+                            <td>{better.FirstName}</td>
+                            <td>{better.LastName}</td>
                             <td><button className="btn btn-primary btn-sm" ><FaEdit /></button></td>
                             <td><button className="btn btn-danger btn-sm ml-1"><FaDeleteLeft /></button></td>
                         </tr>
