@@ -29,6 +29,70 @@ function Rider() {
           fetchHorseData();
         }, []);
 
+    const [RiderID, setRiderID] = useState('')
+    const [selectedRider, setSelectedRider] = useState(null);
+    const [FirstName, setFirstName] = useState('')
+    const [LastName, setLastName] = useState('')
+    const [Email, setEmail] = useState('')
+    const [Address, setAddress] = useState('')
+
+    function riderSubmit(event){
+        event.preventDefault();
+         axios.post( import.meta.env.VITE_API_URL + 'riders', {FirstName, LastName, Email, Address})
+        .then(res => {
+            console.log(res)
+            window.location.reload()
+        }).catch(err => console.log(err))
+    }
+
+    function riderUpdate(event, riderId) {
+        event.preventDefault();
+        console.log(riderId)
+        
+        // Gather form data
+        const firstName = event.target.elements.firstName.value;
+        const lastName = event.target.elements.lastName.value;
+        const email = event.target.elements.email.value;
+        const address = event.target.elements.address.value;
+    
+        // Make PUT request to update rider
+        axios.put( import.meta.env.VITE_API_URL + `riders/${riderId}`, { RiderID: riderId, FirstName: firstName, LastName: lastName, Email: email, Address: address })
+            .then(res => {
+                console.log(res);
+                // Optionally, handle success (e.g., display a success message)
+            })
+            .catch(err => {
+                console.error('Error updating rider:', err);
+                // Optionally, handle error (e.g., display an error message)
+            });
+    }
+
+    const riderDelete = async (RiderID) => {
+        console.log(RiderID)
+        try {
+        const URL =  import.meta.env.VITE_API_URL + 'riders/' + RiderID;
+        console.log(URL)
+        const response = await axios.delete(URL);
+          
+          // Handle success
+        if (response.status === 204) {
+            alert("Rider deleted successfully");
+            window.location.reload()
+        }
+        } catch (error) {
+          console.error('Error deleting rider:', error);
+          // Handle error
+        }
+      };
+
+      const handleRiderSelect = (riderId) => {
+        const selected = riderData.find((rider) => rider.RiderID === parseInt(riderId));
+        setSelectedRider(selected);
+        setFirstName(selected.FirstName);
+        setLastName(selected.LastName);
+        setEmail(selected.Email);
+        setAddress(selected.Address);
+    };
     return (
         <>
         <h2>Add/Edit/Delete Riders</h2>
@@ -52,7 +116,7 @@ function Rider() {
                             <td>{rider.LastName}</td>
                             <td>{rider.Email}</td>
                             <td>{rider.Address}</td>
-                            <td><button className="btn btn-danger btn-sm ml-1"><FaDeleteLeft /></button></td> 
+                            <td><button className="btn btn-danger btn-sm ml-1" onClick={e => riderDelete(rider.RiderID)}><FaDeleteLeft /></button></td> 
                         </tr>
                     ))}
                 </tbody>
@@ -62,22 +126,30 @@ function Rider() {
         <div className="form-size">
             <div className="container form-background">
                 <h2>Add Rider</h2>
-                <form>
+                <form onSubmit={riderSubmit}>
                     <div className="form-group form-padding">
                         <label htmlFor="name">First Name</label>
-                        <input type="text" className="form-control" id="firstName" defaultValue="First Name" />
+                        <input type="text" className="form-control" id="firstName" defaultValue="First Name"
+                        onChange={e => setFirstName(e.target.value)}
+                        />
                     </div>
                     <div className="form-group form-padding">
                         <label htmlFor="name">Last Name</label>
-                        <input type="text" className="form-control" id="lastName" defaultValue="Last Name" />
+                        <input type="text" className="form-control" id="lastName" defaultValue="Last Name" 
+                        onChange={e => setLastName(e.target.value)}
+                        />
                     </div>
                     <div className="form-group form-padding">
                         <label htmlFor="breed">Email</label>
-                        <input type="email" className="form-control" id="email" defaultValue="me@me.com" />
+                        <input type="email" className="form-control" id="email" defaultValue="me@me.com" 
+                        onChange={e => setEmail(e.target.value)}
+                        />
                     </div>
                     <div className="form-group form-padding">
                         <label htmlFor="age">Address</label>
-                        <input type="text" className="form-control" id="address" defaultValue="Address" />
+                        <input type="text" className="form-control" id="address" defaultValue="Address" 
+                        onChange={e => setAddress(e.target.value)}
+                        />
                     </div>
                     <button type="submit" className="btn btn-primary">Add</button>
                 </form>
@@ -85,26 +157,40 @@ function Rider() {
         </div>
         <div className="form-size">
             <div className="form-background container">
-                <h2>Edit Rider</h2>
-                <form>
-                    <div className="form-group form-padding">
-                        <label htmlFor="name">First Name</label>
-                        <input type="text" className="form-control" id="firstName" defaultValue="First Name" />
+            <div className="form-group form-padding">
+                        <label htmlFor="riderSelect">Select Rider</label>
+                        <select className="form-control" id="riderSelect" onChange={(e) => handleRiderSelect(e.target.value)}>
+                            <option value="">Select a rider</option>
+                            {riderData.map((rider) => (
+                                <option key={rider.RiderID} value={rider.RiderID}>
+                                    {`${rider.FirstName} ${rider.LastName}`}
+                                </option>
+                            ))}
+                        </select>
                     </div>
-                    <div className="form-group form-padding">
-                        <label htmlFor="breed">Last Name</label>
-                        <input type="text" className="form-control" id="lastName" defaultValue="Last Name" />
-                    </div>
-                    <div className="form-group form-padding">
-                        <label htmlFor="age">Email</label>
-                        <input type="email" className="form-control" id="email" defaultValue="me@me.com" />
-                    </div>
-                    <div className="form-group form-padding">
-                        <label htmlFor="discipline">Address</label>
-                        <input type="text" className="form-control" id="address" defaultValue="Address" />
-                    </div>
-                    <button type="submit" className="btn btn-primary">Save changes</button>
-                </form>
+                {selectedRider && (
+                       <form onSubmit={(e) => riderUpdate(e, selectedRider.RiderID)}>
+                       {/* Hidden input field to store RiderID */}
+                       <input type="hidden" value={selectedRider.RiderID} />
+                            <div className="form-group form-padding">
+                                <label htmlFor="firstName">First Name</label>
+                                <input type="text" className="form-control" id="firstName" value={FirstName} onChange={(e) => setFirstName(e.target.value)} />
+                            </div>
+                            <div className="form-group form-padding">
+                                <label htmlFor="lastName">Last Name</label>
+                                <input type="text" className="form-control" id="lastName" value={LastName} onChange={(e) => setLastName(e.target.value)} />
+                            </div>
+                            <div className="form-group form-padding">
+                                <label htmlFor="email">Email</label>
+                                <input type="email" className="form-control" id="email" value={Email} onChange={(e) => setEmail(e.target.value)} />
+                            </div>
+                            <div className="form-group form-padding">
+                                <label htmlFor="address">Address</label>
+                                <input type="text" className="form-control" id="address" value={Address} onChange={(e) => setAddress(e.target.value)} />
+                            </div>
+                            <button type="submit" className="btn btn-primary">Save changes</button>
+                        </form>
+                    )}
             </div>
         </div>
     </div>
