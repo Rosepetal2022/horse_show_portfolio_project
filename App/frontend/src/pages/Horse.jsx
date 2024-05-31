@@ -4,21 +4,29 @@ import { useEffect, useState } from 'react';
 
 function Horse() {
   const [horseData, setHorseData] = useState([]);
-  const [ownerData, setOwnerData] = useState([]); // State for owner data
+  const [ownerData, setOwnerData] = useState([]);
   const [selectedHorse, setSelectedHorse] = useState(null);
-  const [ShowName, setShowName] = useState('');
-  const [Breed, setBreed] = useState('');
-  const [Age, setAge] = useState('');
-  const [Discipline, setDiscipline] = useState('');
-  const [PrizeMoneyWon, setPrizeMoneyWon] = useState('');
-  const [OwnerID, setOwnerID] = useState(''); // State for selected owner ID
+
+  // State for the add form
+  const [addShowName, setAddShowName] = useState('');
+  const [addBreed, setAddBreed] = useState('');
+  const [addAge, setAddAge] = useState('');
+  const [addDiscipline, setAddDiscipline] = useState('');
+  const [addPrizeMoneyWon, setAddPrizeMoneyWon] = useState('');
+  const [addOwnerID, setAddOwnerID] = useState('');
+
+  // State for the update form
+  const [updateShowName, setUpdateShowName] = useState('');
+  const [updateBreed, setUpdateBreed] = useState('');
+  const [updateAge, setUpdateAge] = useState('');
+  const [updateDiscipline, setUpdateDiscipline] = useState('');
+  const [updatePrizeMoneyWon, setUpdatePrizeMoneyWon] = useState('');
+  const [updateOwnerID, setUpdateOwnerID] = useState('');
 
   const fetchHorseData = async () => {
     try {
       const URL = import.meta.env.VITE_API_URL + 'horses';
-      console.log(URL);
       const response = await axios.get(URL);
-      console.log("data log from home", response);
       setHorseData(response.data);
     } catch (error) {
       console.error('Error fetching horse data:', error);
@@ -29,9 +37,7 @@ function Horse() {
   const fetchOwnerData = async () => {
     try {
       const URL = import.meta.env.VITE_API_URL + 'owners';
-      console.log(URL);
       const response = await axios.get(URL);
-      console.log("data log from home", response);
       setOwnerData(response.data);
     } catch (error) {
       console.error('Error fetching owner data:', error);
@@ -46,45 +52,62 @@ function Horse() {
 
   const horseSubmit = (event) => {
     event.preventDefault();
-    axios.post(import.meta.env.VITE_API_URL + 'horses', { ShowName, Breed, Age, Discipline, PrizeMoneyWon, OwnerID })
-      .then(res => {
-        console.log(OwnerID)
-        console.log(res);
-        window.location.reload();
-      }).catch(err => console.log(err));
+    axios.post(import.meta.env.VITE_API_URL + 'horses', {
+      ShowName: addShowName,
+      Breed: addBreed,
+      Age: addAge,
+      Discipline: addDiscipline,
+      PrizeMoneyWon: addPrizeMoneyWon,
+      OwnerID: addOwnerID
+    })
+    .then(res => {
+      console.log(res);
+      fetchHorseData(); // Fetch updated horse data
+      // Reset add form state
+      setAddShowName('');
+      setAddBreed('');
+      setAddAge('');
+      setAddDiscipline('');
+      setAddPrizeMoneyWon('');
+      setAddOwnerID('');
+    }).catch(err => console.log(err));
   };
 
-  const horseUpdate = (event, horseId) => {
+  const horseUpdate = (event) => {
     event.preventDefault();
-    console.log(horseId);
-
-    const showName = event.target.elements.showName.value;
-    const breed = event.target.elements.breed.value;
-    const age = event.target.elements.age.value;
-    const discipline = event.target.elements.discipline.value;
-    const prizeMoneyWon = event.target.elements.prizeMoney.value;
-    const ownerID = event.target.elements.ownerID.value; // Capture owner ID
-
-    axios.put(import.meta.env.VITE_API_URL + `horses/${horseId}`, { HorseID: horseId, ShowName: showName, Breed: breed, Age: age, Discipline: discipline, PrizeMoneyWon: prizeMoneyWon, OwnerID: ownerID })
-      .then(res => {
-        console.log(res);
-        window.location.reload();
-      })
-      .catch(err => {
-        console.error('Error updating horse:', err);
-      });
+    axios.put(import.meta.env.VITE_API_URL + `horses/${selectedHorse.HorseID}`, {
+      HorseID: selectedHorse.HorseID,
+      ShowName: updateShowName,
+      Breed: updateBreed,
+      Age: updateAge,
+      Discipline: updateDiscipline,
+      PrizeMoneyWon: updatePrizeMoneyWon,
+      OwnerID: updateOwnerID
+    })
+    .then(res => {
+      console.log(res);
+      fetchHorseData(); // Fetch updated horse data
+      // Reset update form state
+      setSelectedHorse(null);
+      setUpdateShowName('');
+      setUpdateBreed('');
+      setUpdateAge('');
+      setUpdateDiscipline('');
+      setUpdatePrizeMoneyWon('');
+      setUpdateOwnerID('');
+    })
+    .catch(err => {
+      console.error('Error updating horse:', err);
+    });
   };
 
   const horseDelete = async (HorseID) => {
-    console.log(HorseID);
     try {
       const URL = import.meta.env.VITE_API_URL + 'horses/' + HorseID;
-      console.log(URL);
       const response = await axios.delete(URL);
-
       if (response.status === 204) {
         alert("Horse deleted successfully");
-        window.location.reload();
+        fetchHorseData(); // Fetch updated horse data
       } else {
         console.error(`Unexpected response status: ${response.status}`);
         alert('Error deleting horse. Please try again.');
@@ -98,15 +121,13 @@ function Horse() {
   const handleHorseSelect = (horseId) => {
     const selected = horseData.find((horse) => horse.HorseID === parseInt(horseId));
     setSelectedHorse(selected);
-    setShowName(selected.ShowName);
-    setBreed(selected.Breed);
-    setAge(selected.Age);
-    setDiscipline(selected.Discipline);
-    setPrizeMoneyWon(selected.PrizeMoneyWon);
-    setOwnerID(selected.OwnerID); // Set the owner ID
+    setUpdateShowName(selected.ShowName);
+    setUpdateBreed(selected.Breed);
+    setUpdateAge(selected.Age);
+    setUpdateDiscipline(selected.Discipline);
+    setUpdatePrizeMoneyWon(selected.PrizeMoneyWon);
+    setUpdateOwnerID(selected.OwnerID);
   };
-
-
 
   return (
     <>
@@ -145,33 +166,32 @@ function Horse() {
             <h2>Add Horse</h2>
             <form onSubmit={horseSubmit}>
               <div className="form-group form-padding">
-                <label htmlFor="showName">Name</label>
-                <input type="text" className="form-control" id="showName" placeholder="Show Name" value={ShowName} onChange={e => setShowName(e.target.value)} />
+                <label htmlFor="addShowName">Name</label>
+                <input type="text" className="form-control" id="addShowName" placeholder="Show Name" value={addShowName} onChange={e => setAddShowName(e.target.value)} />
               </div>
               <div className="form-group form-padding">
-                <label htmlFor="breed">Breed</label>
-                <input type="text" className="form-control" id="breed" placeholder="Breed" value={Breed} onChange={e => setBreed(e.target.value)} />
+                <label htmlFor="addBreed">Breed</label>
+                <input type="text" className="form-control" id="addBreed" placeholder="Breed" value={addBreed} onChange={e => setAddBreed(e.target.value)} />
               </div>
               <div className="form-group form-padding">
-                <label htmlFor="age">Age</label>
-                <input type="number" className="form-control" id="age" placeholder="Age" value={Age} onChange={e => setAge(e.target.value)} />
+                <label htmlFor="addAge">Age</label>
+                <input type="number" className="form-control" id="addAge" placeholder="Age" value={addAge} onChange={e => setAddAge(e.target.value)} />
               </div>
               <div className="form-group form-padding">
-                <label htmlFor="discipline">Discipline</label>
-                <input type="text" className="form-control" id="discipline" placeholder="Discipline" value={Discipline} onChange={e => setDiscipline(e.target.value)} />
+                <label htmlFor="addDiscipline">Discipline</label>
+                <input type="text" className="form-control" id="addDiscipline" placeholder="Discipline" value={addDiscipline} onChange={e => setAddDiscipline(e.target.value)} />
               </div>
               <div className="form-group form-padding">
-                <label htmlFor="prizeMoney">Prize Money</label>
-                <input type="text" className="form-control" id="prizeMoney" placeholder="Prize Money" value={PrizeMoneyWon} onChange={e => setPrizeMoneyWon(e.target.value)} />
+                <label htmlFor="addPrizeMoney">Prize Money</label>
+                <input type="text" className="form-control" id="addPrizeMoney" placeholder="Prize Money" value={addPrizeMoneyWon} onChange={e => setAddPrizeMoneyWon(e.target.value)} />
               </div>
               <div className="form-group form-padding">
-                <label htmlFor="ownerID">Owner</label>
-                <select className="form-control" id="ownerID" value={OwnerID} onChange={e => setOwnerID(e.target.value)}>
+                <label htmlFor="addOwnerID">Owner</label>
+                <select className="form-control" id="addOwnerID" value={addOwnerID} onChange={e => setAddOwnerID(e.target.value)}>
                   <option value="">Select Owner</option>
                   {ownerData.map((owner) => (
                     <option key={owner.OwnerID} value={owner.OwnerID}>
-                      {owner.FirstName}
-                      {owner.LastName}
+                      {`${owner.FirstName} ${owner.LastName}`}
                     </option>
                   ))}
                 </select>
@@ -179,12 +199,11 @@ function Horse() {
               <button type="submit" className="btn btn-primary">Add</button>
             </form>
           </div>
-          </div>
+        </div>
         <div className="form-size">
           <div className="form-background container">
-            {/* Dropdown menu to select a horse */}
-            <div className="form-group form-padding">
-            <h2>Update Horse</h2>
+            <div className="App">
+              <h2>Update Horse</h2>
               <label htmlFor="horseSelect">Select Horse</label>
               <select className="form-control" id="horseSelect" onChange={(e) => handleHorseSelect(e.target.value)}>
                 <option value="">Select a horse</option>
@@ -197,32 +216,31 @@ function Horse() {
             </div>
             {/* Form fields for editing selected horse */}
             {selectedHorse && (
-              <form onSubmit={(e) => horseUpdate(e, selectedHorse.HorseID)}>
-                {/* Hidden input field to store HorseID */}
+              <form onSubmit={horseUpdate}>
                 <input type="hidden" value={selectedHorse.HorseID} />
                 <div className="form-group form-padding">
-                  <label htmlFor="showName">Show Name</label>
-                  <input type="text" className="form-control" id="showName" value={ShowName} onChange={(e) => setShowName(e.target.value)} />
+                  <label htmlFor="updateShowName">Show Name</label>
+                  <input type="text" className="form-control" id="updateShowName" value={updateShowName} onChange={(e) => setUpdateShowName(e.target.value)} />
                 </div>
                 <div className="form-group form-padding">
-                  <label htmlFor="breed">Breed</label>
-                  <input type="text" className="form-control" id="breed" value={Breed} onChange={(e) => setBreed(e.target.value)} />
+                  <label htmlFor="updateBreed">Breed</label>
+                  <input type="text" className="form-control" id="updateBreed" value={updateBreed} onChange={(e) => setUpdateBreed(e.target.value)} />
                 </div>
                 <div className="form-group form-padding">
-                  <label htmlFor="age">Age</label>
-                  <input type="number" className="form-control" id="age" value={Age} onChange={(e) => setAge(e.target.value)} />
+                  <label htmlFor="updateAge">Age</label>
+                  <input type="number" className="form-control" id="updateAge" value={updateAge} onChange={(e) => setUpdateAge(e.target.value)} />
                 </div>
                 <div className="form-group form-padding">
-                  <label htmlFor="discipline">Discipline</label>
-                  <input type="text" className="form-control" id="discipline" value={Discipline} onChange={(e) => setDiscipline(e.target.value)} />
+                  <label htmlFor="updateDiscipline">Discipline</label>
+                  <input type="text" className="form-control" id="updateDiscipline" value={updateDiscipline} onChange={(e) => setUpdateDiscipline(e.target.value)} />
                 </div>
                 <div className="form-group form-padding">
-                  <label htmlFor="prizeMoney">Prize Money</label>
-                  <input type="text" className="form-control" id="prizeMoney" value={PrizeMoneyWon} onChange={(e) => setPrizeMoneyWon(e.target.value)} />
+                  <label htmlFor="updatePrizeMoney">Prize Money</label>
+                  <input type="text" className="form-control" id="updatePrizeMoney" value={updatePrizeMoneyWon} onChange={(e) => setUpdatePrizeMoneyWon(e.target.value)} />
                 </div>
                 <div className="form-group form-padding">
-                  <label htmlFor="ownerID">Owner</label>
-                  <select className="form-control" id="ownerID" value={OwnerID} onChange={(e) => setOwnerID(e.target.value)}>
+                  <label htmlFor="updateOwnerID">Owner</label>
+                  <select className="form-control" id="updateOwnerID" value={updateOwnerID} onChange={(e) => setUpdateOwnerID(e.target.value)}>
                     <option value="">Select Owner</option>
                     {ownerData.map((owner) => (
                       <option key={owner.OwnerID} value={owner.OwnerID}>
@@ -235,8 +253,8 @@ function Horse() {
               </form>
             )}
           </div>
-       </div>
-       </div>
+        </div>
+      </div>
     </>
   );
 }

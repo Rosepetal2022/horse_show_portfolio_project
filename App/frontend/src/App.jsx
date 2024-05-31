@@ -11,6 +11,7 @@ import Bets from './pages/Bets';
 import Navbar from './components/NavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 function App() {
   return (
     <>
