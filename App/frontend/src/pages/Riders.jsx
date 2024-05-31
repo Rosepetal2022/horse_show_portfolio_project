@@ -158,6 +158,7 @@ function Rider() {
         <div className="form-size">
             <div className="form-background container">
             <div className="form-group form-padding">
+                <h2>Update Rider</h2>
                         <label htmlFor="riderSelect">Select Rider</label>
                         <select className="form-control" id="riderSelect" onChange={(e) => handleRiderSelect(e.target.value)}>
                             <option value="">Select a rider</option>

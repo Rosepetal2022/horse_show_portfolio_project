@@ -83,7 +83,7 @@ function Betters() {
             </div>
             <div className="form-size">
                 <div className="form-background container">
-                    <h2>Edit Better</h2>
+                    <h2>Update Better</h2>
                     <form>
                         <div className="form-group form-padding">
                             <label htmlFor="name">First Name</label>

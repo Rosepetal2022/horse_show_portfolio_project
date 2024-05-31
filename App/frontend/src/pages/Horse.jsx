@@ -184,6 +184,7 @@ function Horse() {
           <div className="form-background container">
             {/* Dropdown menu to select a horse */}
             <div className="form-group form-padding">
+            <h2>Update Horse</h2>
               <label htmlFor="horseSelect">Select Horse</label>
               <select className="form-control" id="horseSelect" onChange={(e) => handleHorseSelect(e.target.value)}>
                 <option value="">Select a horse</option>

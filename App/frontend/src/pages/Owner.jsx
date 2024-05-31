@@ -63,6 +63,7 @@ function Owner() {
         axios.put(import.meta.env.VITE_API_URL + `owners/${ownerId}`, { OwnerID: ownerId, FirstName: firstName, LastName: lastName, Email: email, Address: address })
             .then(res => {
                 console.log(res);
+                window.location.reload()
                 // Optionally, handle success (e.g., display a success message)
             })
             .catch(err => {
@@ -163,6 +164,7 @@ function Owner() {
                 <div className="form-background container">
                     {/* Dropdown menu to select an owner */}
                     <div className="form-group form-padding">
+                    <h2>Update Owner</h2>
                         <label htmlFor="ownerSelect">Select Owner</label>
                         <select className="form-control" id="ownerSelect" onChange={(e) => handleOwnerSelect(e.target.value)}>
                             <option value="">Select an owner</option>

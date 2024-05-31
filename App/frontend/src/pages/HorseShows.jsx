@@ -173,6 +173,7 @@ function HorseShows() {
     <div className="form-size">
         <div className="form-background container">
           <div className="form-group form-padding">
+          <h2>Update Horse Show</h2>
                       <label htmlFor="horseShowSelect">Select HorseShow</label>
                       <select className="form-control" id="horseShowSelect" onChange={(e) => handleHorseShowSelect(e.target.value)}>
                           <option value="">Select a Horse Show</option>
