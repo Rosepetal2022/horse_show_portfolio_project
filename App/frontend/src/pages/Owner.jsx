@@ -14,7 +14,7 @@ function Owner() {
      const fetchOwnerData = async () => {
        try {
          // Construct the URL for the API call
-         const URL = 'http://classwork.engr.oregonstate.edu:9875/owners';
+         const URL = import.meta.env.VITE_API_URL + 'owners';
          console.log(URL)
          // Use Axios to make the GET request
          const response = await axios.get(URL);
@@ -42,7 +42,7 @@ function Owner() {
 
     function ownerSubmit(event){
         event.preventDefault();
-         axios.post('http://classwork.engr.oregonstate.edu:9875/owners', {FirstName, LastName, Email, Address})
+         axios.post(import.meta.env.VITE_API_URL + 'owners', {FirstName, LastName, Email, Address})
         .then(res => {
             console.log(res)
             window.location.reload()
@@ -60,7 +60,7 @@ function Owner() {
         const address = event.target.elements.address.value;
     
         // Make PUT request to update owner
-        axios.put(`http://classwork.engr.oregonstate.edu:9875/owners/${ownerId}`, { OwnerID: ownerId, FirstName: firstName, LastName: lastName, Email: email, Address: address })
+        axios.put(import.meta.env.VITE_API_URL + `owners/${ownerId}`, { OwnerID: ownerId, FirstName: firstName, LastName: lastName, Email: email, Address: address })
             .then(res => {
                 console.log(res);
                 // Optionally, handle success (e.g., display a success message)
@@ -74,7 +74,7 @@ function Owner() {
     const ownerDelete = async (OwnerID) => {
         console.log(OwnerID)
         try {
-        const URL = 'http://classwork.engr.oregonstate.edu:9875/owners/' + OwnerID;
+        const URL = import.meta.env.VITE_API_URL + 'owners/' + OwnerID;;
         console.log(URL)
         const response = await axios.delete(URL);
           
