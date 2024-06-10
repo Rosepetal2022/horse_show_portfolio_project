@@ -1,4 +1,4 @@
-/ Load db config
+// Load db config
 const db = require("../database/config");
 const dotenv = require("dotenv").config();
 // Load .env variables
