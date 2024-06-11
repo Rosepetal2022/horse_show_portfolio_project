@@ -1,6 +1,10 @@
 Horse Show Database
 This project is a horse show database application built using SQL for the backend and React for the frontend.
 
+Citation:
+This project was started by using the Oregon State University starter guide for node.js and React. The provided code 
+is cited in the app. 
+
 Features
 View a list of bets placed on horse shows.
 Add new bets to the database.
