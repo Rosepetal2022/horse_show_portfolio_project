@@ -23,6 +23,7 @@ function Bets() {
         try {
             const URL = import.meta.env.VITE_API_URL + 'bets';
             const response = await axios.get(URL);
+            console.log(response.data)
             setBetData(response.data);
         } catch (error) {
             console.error('Error fetching bets data:', error);
@@ -116,7 +117,7 @@ function Bets() {
     };
 
     const handleBetSelect = (BetID) => {
-        const selected = betData.find((bets) => bets.BetID === parseInt(BetID));
+        const selected = betData.find((bet) => bet.BetID === parseInt(BetID));
         setSelectedBet(selected);
         setUpdateBetterID(selected.BetterID);
         setUpdateHorseID(selected.HorseID);
@@ -134,15 +135,16 @@ function Bets() {
                             <th scope="col">Better</th>
                             <th scope="col">Horse Show</th>
                             <th scope="col">Horse</th>
+                            <th scope="col">Delete</th>
                         </tr>
                     </thead>
                     <tbody>
                         {betData.map((bet, index) => (
                             <tr key={index}>
                                 <th scope="row">{index + 1}</th>
-                                <td>{bet.BetID} {bet.lastName}</td>
-                                <td>{bet.HorseShowID}</td>
-                                <td>{bet.HorseID}</td>
+                                <td>{bet.FirstName} {bet.LastName}</td>
+                                <td>{bet.HorseShowName}</td>
+                                <td>{bet.ShowName}</td>
                                 <td><button className="btn btn-danger btn-sm ml-1" onClick={() => betDelete(bet.BetID)}><FaDeleteLeft /></button></td>
                             </tr>
                         ))}
@@ -152,7 +154,7 @@ function Bets() {
             <div className="d-flex justify-content-between">
                 <div className="form-size">
                     <div className="container form-background">
-                        <h2>Add Placed Bet</h2>
+                        <h2>Add Bet</h2>
                         <form onSubmit={betSubmit}>
                             <div className="form-group form-padding">
                                 <label htmlFor="better">Better</label>
@@ -165,7 +167,7 @@ function Bets() {
                                     <option value="">Select Better</option>
                                     {betterData.map(better => (
                                         <option key={better.BetterID} value={better.BetterID}>
-                                            {better.firstName} {better.lastName}
+                                            {better.FirstName} {better.LastName}
                                         </option>
                                     ))}
                                 </select>
@@ -181,7 +183,7 @@ function Bets() {
                                     <option value="">Select Horse Show</option>
                                     {horseShowData.map(show => (
                                         <option key={show.HorseShowID} value={show.HorseShowID}>
-                                            {show.name}
+                                            {show.HorseShowName}
                                         </option>
                                     ))}
                                 </select>
@@ -197,13 +199,81 @@ function Bets() {
                                     <option value="">Select Horse</option>
                                     {horseData.map(horse => (
                                         <option key={horse.HorseID} value={horse.HorseID}>
-                                            {horse.name}
+                                            {horse.ShowName}
                                         </option>
                                     ))}
                                 </select>
                             </div>
                             <button type="submit" className="btn btn-primary">Add</button>
                         </form>
+                    </div>
+                </div>
+                <div className="form-size">
+                    <div className="container form-background">
+                        <h2>Update Bet</h2>
+                        <label htmlFor="betSelect">Select Bet</label>
+                        <select className="form-control" id="betSelect" onChange={(e) => handleBetSelect(e.target.value)}>
+                            <option value="">Select a Bet</option>
+                            {betData.map((bet) => (
+                                <option key={bet.BetID} value={bet.BetID}>
+                                    {bet.BetID}
+                                </option>
+                            ))}
+                        </select>
+                        {selectedBet && (
+                            <form onSubmit={betUpdate}>
+                                <input type="hidden" value={selectedBet.BetID} />
+                                <div className="form-group form-padding">
+                                    <label htmlFor="updateBetterID">Better</label>
+                                    <select
+                                        className="form-control"
+                                        id="updateBetterID"
+                                        value={updateBetterID}
+                                        onChange={(e) => setUpdateBetterID(e.target.value)}
+                                    >
+                                        <option value="">Select Better</option>
+                                        {betterData.map(better => (
+                                            <option key={better.BetterID} value={better.BetterID}>
+                                                {better.FirstName} {better.LastName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="form-group form-padding">
+                                    <label htmlFor="updateHorseShowID">Horse Show</label>
+                                    <select
+                                        className="form-control"
+                                        id="updateHorseShowID"
+                                        value={updateHorseShowID}
+                                        onChange={(e) => setUpdateHorseShowID(e.target.value)}
+                                    >
+                                        <option value="">Select Horse Show</option>
+                                        {horseShowData.map(show => (
+                                            <option key={show.HorseShowID} value={show.HorseShowID}>
+                                                {show.HorseShowName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="form-group form-padding">
+                                    <label htmlFor="updateHorseID">Horse</label>
+                                    <select
+                                        className="form-control"
+                                        id="updateHorseID"
+                                        value={updateHorseID}
+                                        onChange={(e) => setUpdateHorseID(e.target.value)}
+                                    >
+                                        <option value="">Select Horse</option>
+                                        {horseData.map(horse => (
+                                            <option key={horse.HorseID} value={horse.HorseID}>
+                                                {horse.ShowName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <button type="submit" className="btn btn-primary">Save changes</button>
+                            </form>
+                        )}
                     </div>
                 </div>
             </div>

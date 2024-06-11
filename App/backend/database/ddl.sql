@@ -104,13 +104,12 @@ INSERT INTO HorsesAndRiders (RiderID, HorseID)
 VALUES (2, 1), (5, 2), (4, 5), (6, 6);
 
 
-INSERT INTO HorseShows (HorseShowName, ShowDate, Location, PrizeMoneyOffered, NumEnteredHorse)
-VALUES ('Early Summer Classic', '2024-06-15', 'Portland, OR', 20000, 200),
+INSERT INTO HorseShows (HorseShowID, HorseShowName, ShowDate, Location, PrizeMoneyOffered, NumEnteredHorse)
+VALUES
+    ('Early Summer Classic', '2024-06-15', 'Portland, OR', 20000, 200),
     ('Oregon Trail', '2024-06-22', 'Bellevue, WA', 20000, 250),
     ('Willamette Classic', '2024-07-06', 'Del Mar, CA', 20000, 400),
-    ('Country Classic', '2024-07-13', 'Sonoma, CA', 20000, 300),
-    ('Oregon Summer Classic', '2024-08-17', 'Bend, OR', 20000, 250),
-    ('Northwest Spectacular', '2024-08-24', 'Monroe, WA', 20000, 100);
+    ('Country Classic', '2024-07-13', 'Sonoma, CA', 20000, 300);
 
 
 
@@ -122,10 +121,10 @@ VALUES (100, 'Natalie', 'Fern'),
 
 INSERT INTO Bets (BetterID, HorseShowID, HorseID)
 VALUES
-    (1, 30, 10),
-    (2, 34, 12),
-    (2, 31, 13),
-    (3, 35, 14);
+    (1, 1, 1),  
+    (2, 2, 2),  
+    (2, 3, 3),  
+    (3, 4, 4); 
 
 
 SET FOREIGN_KEY_CHECKS=1;

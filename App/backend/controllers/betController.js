@@ -1,12 +1,31 @@
 // Load db config
 const db = require("../database/config");
 const dotenv = require("dotenv").config();
+const lodash = require("lodash")
 // Load .env variables
 
 const getBets = async (req, res) => {
     try {
       // Select all rows from the "bsg_people" table
-      const query = "SELECT * FROM Bets";
+      const query = `
+      SELECT
+          Bets.BetID,
+          Bets.HorseShowID,
+          Horses.HorseID,
+          Horses.ShowName,
+          HorseShows.HorseShowID,
+          HorseShows.HorseShowName,
+          Betters.BetterID,
+          Betters.FirstName,
+          Betters.LastName
+      FROM
+          Bets
+      INNER JOIN
+          Horses ON Bets.HorseID = Horses.HorseID
+      INNER JOIN
+          HorseShows ON Bets.HorseShowID = HorseShows.HorseShowID
+      INNER JOIN
+          Betters ON Bets.BetterID = Betters.BetterID`;
       // Execute the query using the "db" object from the configuration file
       const [rows] = await db.query(query);
       console.log(rows)
@@ -86,7 +105,7 @@ const getBets = async (req, res) => {
   
       // If any attributes are not equal, perform the update
       if (!lodash.isEqual(newBet, oldBet)) {
-        const query = "UPDATE Bets SET BetterID=?, HorseID=?, HorseShowID WHERE BetID = ?";
+        const query = "UPDATE Bets SET BetterID=?, HorseID=?, HorseShowID=? WHERE BetID = ?";
   
         const values = [
           newBet.BetterID,

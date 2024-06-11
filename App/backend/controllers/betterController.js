@@ -20,14 +20,14 @@ const getBetters = async (req, res) => {
 
   const createBetters = async (req, res) => {
     try {
-      const { FirstName, LastName, Amount } = req.body;
+      const { FirstName, LastName, BetterAmount } = req.body;
       const query =
-      "INSERT INTO Betters (FirstName, LastName, Amount) VALUES (?, ?, ?, ?)";
+      "INSERT INTO Betters (FirstName, LastName, BetterAmount) VALUES (?, ?, ?)";
   
       const response = await db.query(query, [
         FirstName,
         LastName,
-        Amount,
+        BetterAmount,
       ]);
       console.log(response)
       res.status(201).json(response);

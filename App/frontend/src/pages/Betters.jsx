@@ -34,11 +34,11 @@ function Betters() {
     const [selectedBetter, setSelectedBetter] = useState(null);
     const [FirstName, setFirstName] = useState('')
     const [LastName, setLastName] = useState('')
-    const [Amount, setAmount] = useState('')
+    const [BetterAmount, setBetterAmount] = useState('')
 
     function betterSubmit(event) {
         event.preventDefault();
-        axios.post(import.meta.env.VITE_API_URL + 'betters', { FirstName, LastName, Amount })
+        axios.post(import.meta.env.VITE_API_URL + 'betters', { FirstName, LastName, BetterAmount })
             .then(res => {
                 console.log(res)
                 window.location.reload()
@@ -52,7 +52,7 @@ function Betters() {
         // Gather form data
         const firstName = event.target.elements.firstName.value;
         const lastName = event.target.elements.lastName.value;
-        const amount = event.target.elements.email.value;
+        const amount = event.target.elements.amount.value;
 
         // Make PUT request to update owner
         axios.put(import.meta.env.VITE_API_URL + `betters/${betterId}`, { BetterID: betterId, FirstName: firstName, LastName: lastName, Amount: amount })
@@ -90,7 +90,7 @@ function Betters() {
         setSelectedBetter(selected);
         setFirstName(selected.FirstName);
         setLastName(selected.LastName);
-        setAmount(selected.Amount);
+        setBetterAmount(selected.BetterAmount);
     };
 
     return (
@@ -104,7 +104,6 @@ function Betters() {
                             <th scope="col">Amout</th>
                             <th scope="col">First Name</th>
                             <th scope="col">Last Name</th>
-                            <th scope="col">Edit</th>
                             <th scope="col">Delete</th>
                         </tr>
                     </thead>
@@ -112,10 +111,10 @@ function Betters() {
                         {betterData.map((better, index) => (
                             <tr key={index}>
                                 <th scope="row">{index + 1}</th>
-                                <td>{better.Amount}</td>
+                                <td>${better.BetterAmount}</td>
                                 <td>{better.FirstName}</td>
                                 <td>{better.LastName}</td>
-                                <td><button className="btn btn-danger btn-sm ml-1" onClick={e => betterDelete(data.BetterID)}><FaDeleteLeft /></button></td>
+                                <td><button className="btn btn-danger btn-sm ml-1" onClick={e => betterDelete(better.BetterID)}><FaDeleteLeft /></button></td>
                             </tr>
                         ))}
                     </tbody>
@@ -139,50 +138,11 @@ function Betters() {
                                 />
                             </div>
                             <div className="form-group form-padding">
-                                <label htmlFor="amount">$ Amount</label>
-                                <input type="number" className="form-control" id="amount" placeholder="$0.00"
-                                    onChange={e => setAmount(e.target.value)}
-                                />
+                                <label htmlFor="betterAmount">$ Amount</label>
+                                <input type="number" className="form-control" id="updateAmount" value={BetterAmount} onChange={(e) => setBetterAmount(e.target.value)} />
                             </div>
                             <button type="submit" className="btn btn-primary">Add</button>
                         </form>
-                    </div>
-                </div>
-                <div className="form-size">
-                    <div className="form-background container">
-                        {/* Dropdown menu to select an better */}
-                        <div className="form-group form-padding">
-                            <h2>Update Better</h2>
-                            <label htmlFor="betterSelect">Select Better</label>
-                            <select className="form-control" id="betterSelect" onChange={(e) => handleBetterSelect(e.target.value)}>
-                                <option value="">Select an better</option>
-                                {betterData.map((better) => (
-                                    <option key={better.BetterID} value={better.BetterID}>
-                                        {`${better.FirstName} ${better.LastName} ${better.Amount}`}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        {/* Form fields for editing selected owner */}
-                        {selectedBetter && (
-                            <form onSubmit={(e) => betterUpdate(e, selectedBetter.BetterID)}>
-                                {/* Hidden input field to store OwnerID */}
-                                <input type="hidden" value={selectedBetter.BetterID} />
-                                <div className="form-group form-padding">
-                                    <label htmlFor="firstName">First Name</label>
-                                    <input type="text" className="form-control" id="firstName" value={FirstName} onChange={(e) => setFirstName(e.target.value)} />
-                                </div>
-                                <div className="form-group form-padding">
-                                    <label htmlFor="lastName">Last Name</label>
-                                    <input type="text" className="form-control" id="lastName" value={LastName} onChange={(e) => setLastName(e.target.value)} />
-                                </div>
-                                <div className="form-group form-padding">
-                                    <label htmlFor="amount">Amount</label>
-                                    <input type="amount" className="form-control" id="amount" value={Amount} onChange={(e) => setAmount(e.target.value)} />
-                                </div>
-                                <button type="submit" className="btn btn-primary">Save changes</button>
-                            </form>
-                        )}
                     </div>
                 </div>
             </div>
