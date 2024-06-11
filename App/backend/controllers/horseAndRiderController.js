@@ -1,24 +1,19 @@
 // Load db config
 const db = require("../database/config");
 const dotenv = require("dotenv").config();
-// Load .env variables
 const lodash = require("lodash")
 
 const getSpecificHorse = async (req, res) => {
-  // const HorseID = req.params.id;
-  // Get the new owner data from the request body
-  // const newHorse = req.body;
 
   try {
-    // Fetch the current owner data from the database
+    // Fetch the current data from the database
     const [rows] = await db.query("SELECT HAndRID, Horses.ShowName AS HorseName, \n CONCAT(Riders.FirstName, ' ', Riders.LastName) AS RiderName \n FROM Horses JOIN HorsesAndRiders ON Horses.HorseID = HorsesAndRiders.HorseID \n JOIN Riders ON HorsesAndRiders.RiderID = Riders.RiderID;");
-    //console.log('HorseID:', HorseID);
     console.log(rows)
 
     res.status(200).json(rows);
 
   } catch (error) {
-    console.log("Error updating Horse", error);
+    console.log("Error updating Horse and Rider", error);
     res.status(500).json({ error: `Error updating the Horse with id ${HorseID}` });
   }
 };
@@ -27,18 +22,18 @@ const deleteHorseAndRider = async (req, res) => {
   const HAndRID = req.params.HAndRID;
   
   try {
-    // Ensure the person exitst
+    // Ensure the pair exists
     const [isExisting] = await db.query(
       "SELECT 1 FROM HorsesAndRiders WHERE HAndRID = ?",
       [HAndRID]
     );
     
-    // If the person doesn't exist, return an error
+    // If the pair doesn't exist, return an error
     if (isExisting.length === 0) {
       return res.status(404).send("HorseAndRider not found");
     }
 
-  // Delete the person from bsg_people
+  // Delete the HorseAndRider from the table
     await db.query("DELETE FROM HorsesAndRiders WHERE HAndRID = ?", [HAndRID]);
     
 
@@ -62,7 +57,7 @@ const createHAndR = async (req, res) => {
     console.log(response)
     res.status(201).json(response);
   } catch (error) {
-    // Print the error for the dev
+    // Print the error
     console.error("Error creating horse:", error);
     // Inform the client of the error
     res.status(500).json({ error: "Error creating horse" });
@@ -70,13 +65,13 @@ const createHAndR = async (req, res) => {
 }
 
 const updateHAndR = async (req, res) => {
-  // Get the OwnerID from the request parameters
+  // Get the HorseAndRiderID from the request parameters
   const HAndRID = req.params.id;
-  // Get the new owner data from the request body
+  // Get the new data from the request body
   const newHAndR = req.body;
 
   try {
-    // Fetch the current owner data from the database
+    // Fetch the current data from the database
     const [data] = await db.query("SELECT * FROM HorsesAndRiders WHERE HAndRID = ?", [HAndRID]);
     console.log('HAndRID:', HAndRID);
 
@@ -95,7 +90,7 @@ const updateHAndR = async (req, res) => {
       const values = [
         newHAndR.RiderID,
         newHAndR.HorseID,
-        HAndRID  // Add the OwnerID here
+        HAndRID  
       ];
 
       // Perform the update
@@ -120,7 +115,6 @@ const updateHAndR = async (req, res) => {
 
 // Export the functions as methods of an object
 module.exports = {
-   // getHorsesAndRiders,
     getSpecificHorse,
     deleteHorseAndRider,
     createHAndR,

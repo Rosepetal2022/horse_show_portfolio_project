@@ -1,21 +1,19 @@
-// Load db config
+
 const db = require("../database/config");
 const dotenv = require("dotenv").config();
-// Load .env variables
 const lodash = require("lodash");
 
 const getHorseShows = async (req, res) => {
     try {
-      // Select all rows from the "bsg_people" table
+      // Select all rows from the HorseShows table
       const query = "SELECT * FROM HorseShows";
-      // Execute the query using the "db" object from the configuration file
       const [rows] = await db.query(query);
       console.log(rows)
       // Send back the rows to the client
       res.status(200).json(rows);
     } catch (error) {
-      console.error("Error fetching people from the database:", error);
-      res.status(500).json({ error: "Error fetching people" });
+      console.error("Error fetching horseShow from the database:", error);
+      res.status(500).json({ error: "Error fetching horseShow" });
     }
   };
 
@@ -35,8 +33,8 @@ const getHorseShows = async (req, res) => {
       console.log(response)
       res.status(201).json(response);
     } catch (error) {
-      console.error("Error creating rider:", error);
-      res.status(500).json({ error: "Error creating rider" });
+      console.error("Error creating HorseShow", error);
+      res.status(500).json({ error: "Error creating HorseShow" });
     }
   };
   
@@ -70,7 +68,7 @@ const getHorseShows = async (req, res) => {
           newHorseShow.Location,
           newHorseShow.PrizeMoneyOffered,
           newHorseShow.NumEnteredHorse,
-          HorseShowID  // Add the HorseShowID here
+          HorseShowID  
         ];
   
         // Perform the update
@@ -97,18 +95,18 @@ const getHorseShows = async (req, res) => {
     const HorseShowID = req.params.HorseShowID;
     
     try {
-      // Ensure the person exitst
+      // Ensure the horseShow exists
       const [isExisting] = await db.query(
         "SELECT 1 FROM HorseShows WHERE HorseShowID = ?",
         [HorseShowID]
       );
       
-      // If the person doesn't exist, return an error
+      // If the horseShow doesn't exist, return an error
       if (isExisting.length === 0) {
         return res.status(404).send("Person not found");
       }
   
-    // Delete the person from bsg_people
+    // Delete the HorseShow from HorseShow table
       await db.query("DELETE FROM HorseShows WHERE HorseShowID = ?", [HorseShowID]);
       
   

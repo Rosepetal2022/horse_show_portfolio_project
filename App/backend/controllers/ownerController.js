@@ -1,21 +1,19 @@
-// Load db config
+
 const db = require('../database/config');
 const dotenv = require("dotenv").config();
-// Load .env variables
 const lodash = require("lodash");
 
 const getOwners = async (req, res) => {
     try {
-      // Select all rows from the "bsg_people" table
+      // Select all rows from the Owners table
       const query = "SELECT * FROM Owners";
-      // Execute the query using the "db" object from the configuration file
       const [rows] = await db.query(query);
       console.log(rows)
       // Send back the rows to the client
       res.status(200).json(rows);
     } catch (error) {
-      console.error("Error fetching people from the database:", error);
-      res.status(500).json({ error: "Error fetching people" });
+      console.error("Error fetching owners from the database:", error);
+      res.status(500).json({ error: "Error fetching owners" });
     }
   };
 
@@ -71,7 +69,7 @@ const createOwner = async (req, res) => {
           newOwner.LastName,
           newOwner.Email,
           newOwner.Address,
-          OwnerID  // Add the OwnerID here
+          OwnerID  
         ];
   
         // Perform the update
@@ -98,18 +96,18 @@ const createOwner = async (req, res) => {
     const OwnerID = req.params.OwnerID;
     
     try {
-      // Ensure the person exitst
+      // Ensure the owner exists
       const [isExisting] = await db.query(
         "SELECT 1 FROM Owners WHERE OwnerID = ?",
         [OwnerID]
       );
       
-      // If the person doesn't exist, return an error
+      // If the owner doesn't exist, return an error
       if (isExisting.length === 0) {
         return res.status(404).send("Person not found");
       }
   
-    // Delete the person from bsg_people
+    // Delete the owner from Owner table
       await db.query("DELETE FROM Owners WHERE OwnerID = ?", [OwnerID]);
       
   

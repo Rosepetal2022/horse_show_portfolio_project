@@ -1,16 +1,14 @@
-// Load db config
 const db = require("../database/config");
 const dotenv = require("dotenv").config();
-// Load .env variables
+
 
 const getBetters = async (req, res) => {
     try {
-      // Select all rows from the "bsg_people" table
+      // Select all rows from the betters table
       const query = "SELECT * FROM Betters";
-      // Execute the query using the "db" object from the configuration file
+  
       const [rows] = await db.query(query);
-      console.log(rows)
-      // Send back the rows to the client
+     
       res.status(200).json(rows);
     } catch (error) {
       console.error("Error fetching people from the database:", error);
@@ -32,7 +30,7 @@ const getBetters = async (req, res) => {
       console.log(response)
       res.status(201).json(response);
     } catch (error) {
-      // Print the error for the dev
+      // Print the error 
       console.error("Error creating better:", error);
       // Inform the client of the error
       res.status(500).json({ error: "Error creating better" });
@@ -44,18 +42,18 @@ const getBetters = async (req, res) => {
     const BetterID = req.params.BetterID;
     
     try {
-      // Ensure the person exitst
+      // Ensure the better exitst
       const [isExisting] = await db.query(
         "SELECT 1 FROM Betters WHERE BetterID = ?",
         [BetterID]
       );
       
-      // If the person doesn't exist, return an error
+      // If the better doesn't exist, return an error
       if (isExisting.length === 0) {
         return res.status(404).send("Better not found");
       }
   
-    // Delete the person from bsg_people
+    // Delete the better from the table
       await db.query("DELETE FROM Betters WHERE BetterID = ?", [BetterID]);
       
   
@@ -69,13 +67,13 @@ const getBetters = async (req, res) => {
   };
 
   const updateBetters = async (req, res) => {
-    // Get the OwnerID from the request parameters
+    // Get the BetterID from the request parameters
     const BetterID = req.params.id;
-    // Get the new owner data from the request body
+    // Get the new better data from the request body
     const newBetter = req.body;
   
     try {
-      // Fetch the current owner data from the database
+      // Fetch the current better data from the database
       const [data] = await db.query("SELECT * FROM Betters WHERE BetterID = ?", [BetterID]);
       console.log('BetterID:', BetterID);
   

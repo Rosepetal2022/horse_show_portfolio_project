@@ -72,6 +72,8 @@ function Bets() {
         fetchHorseShowData();
     }, []);
 
+
+    // CRUD functions
     const betDelete = async (BetID) => {
         try {
             const URL = import.meta.env.VITE_API_URL + 'bets/' + BetID;

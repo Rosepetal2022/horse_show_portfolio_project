@@ -16,7 +16,7 @@ function HorseAndRiders() {
         const [updateHorseID, setUpdateHorseID] = useState('');
         const [updateRiderID, setUpdateRiderID] = useState('');
 
-        // Define a function to fetch diagnostic data from the API
+        // Fetch data functions
         const fetchHorseAndRiderData = async () => {
           try {
             // Construct the URL for the API call
@@ -56,7 +56,7 @@ function HorseAndRiders() {
             }
           };
       
-        // useEffect hook to trigger the fetchDiagnosticData function when the component mounts
+        // useEffect hook to trigger fetching data when component mounts
         useEffect(() => {
           fetchHorseAndRiderData();
           fetchHorseData();

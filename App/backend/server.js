@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 8500;
+// This code was used from the started guide from Oregon State University
 
 // Middleware:
 
@@ -14,17 +15,6 @@ app.use(cors({ credentials: true, origin: "*" }));
 app.use(express.json());
 
 // API Routes for backend CRUD:
-//  app.use("/api/people", require("./routes/peopleRoutes"));
-
-
-// Add your Connect DB Activitiy Code Below:
-// ...
-
-
-// ...
-// End Connect DB Activity Code.
-// Match to your database config route
-// const db = require('./database/config.js');
 app.use('/horses', require("./routes/horses"));
 app.use('/owners', require("./routes/owners"));
 app.use('/riders', require('./routes/riders'));

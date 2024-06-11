@@ -4,10 +4,9 @@ import axios from "axios"
 import { useEffect, useState } from 'react';
 
 function Betters() {
-    // useState hook to initialize the diagnosticData state variable to store the fetched data
     const [betterData, setBetterData] = useState([]);
 
-    // Define a function to fetch diagnostic data from the API
+    // Fetch data functions
     const fetchBetterData = async () => {
         try {
             // Construct the URL for the API call
@@ -25,7 +24,7 @@ function Betters() {
         }
     };
 
-    // useEffect hook to trigger the fetchDiagnosticData function when the component mounts
+    // useEffect hook to trigger when component mounts
     useEffect(() => {
         fetchBetterData();
     }, []);

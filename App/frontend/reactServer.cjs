@@ -1,5 +1,6 @@
 // reactServer.cjs
 // Uses common javascript to serve the react build folder (/dist)
+//This code was provided by Oregon State University
 
 const express = require('express');
 const path = require('path');

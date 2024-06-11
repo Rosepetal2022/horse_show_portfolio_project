@@ -1,14 +1,11 @@
-// Load db config
 const db = require("../database/config");
 const dotenv = require("dotenv").config();
-// Load .env variables
 const lodash = require("lodash");
 
 const getHorses = async (req, res) => {
     try {
-      // Select all rows from the "bsg_people" table
+      // Select all rows from the Horses table
       const query = "SELECT * FROM Horses";
-      // Execute the query using the "db" object from the configuration file
       const [rows] = await db.query(query);
       console.log(rows)
       // Send back the rows to the client
@@ -43,13 +40,13 @@ const getHorses = async (req, res) => {
   }
 
   const updateHorse = async (req, res) => {
-    // Get the OwnerID from the request parameters
+    // Get the HorseID from the request parameters
     const HorseID = req.params.id;
-    // Get the new owner data from the request body
+    // Get the new horse data from the request body
     const newHorse = req.body;
   
     try {
-      // Fetch the current owner data from the database
+      // Fetch the current horse data from the database
       const [data] = await db.query("SELECT * FROM Horses WHERE HorseID = ?", [HorseID]);
       console.log('HorseID:', HorseID);
   
@@ -71,7 +68,7 @@ const getHorses = async (req, res) => {
           newHorse.Age,
           newHorse.Discipline,
           newHorse.PrizeMoneyWon,
-          HorseID  // Add the OwnerID here
+          HorseID  
         ];
   
         // Perform the update
@@ -98,18 +95,18 @@ const getHorses = async (req, res) => {
     const HorseID = req.params.HorseID;
     
     try {
-      // Ensure the person exitst
+      // Ensure the horse exitst
       const [isExisting] = await db.query(
         "SELECT 1 FROM Horses WHERE HorseID = ?",
         [HorseID]
       );
       
-      // If the person doesn't exist, return an error
+      // If the horse doesn't exist, return an error
       if (isExisting.length === 0) {
         return res.status(404).send("Horse not found");
       }
   
-    // Delete the person from bsg_people
+    // Delete the horse from the Horses table
       await db.query("DELETE FROM Horses WHERE HorseID = ?", [HorseID]);
       
   

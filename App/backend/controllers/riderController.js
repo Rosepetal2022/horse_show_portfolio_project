@@ -1,14 +1,12 @@
-// Load db config
+
 const db = require("../database/config");
 const dotenv = require("dotenv").config();
-// Load .env variables
 const lodash = require("lodash");
 
 const getRiders = async (req, res) => {
     try {
-      // Select all rows from the "bsg_people" table
+      // Select all rows from the riders table
       const query = "SELECT * FROM Riders";
-      // Execute the query using the "db" object from the configuration file
       const [rows] = await db.query(query);
       console.log(rows)
       // Send back the rows to the client
@@ -69,7 +67,7 @@ const updateRider = async (req, res) => {
         newRider.LastName,
         newRider.Email,
         newRider.Address,
-        RiderID  // Add the RiderID here
+        RiderID
       ];
 
       // Perform the update
@@ -96,18 +94,18 @@ const deleteRider = async (req, res) => {
   const RiderID = req.params.RiderID;
   
   try {
-    // Ensure the person exitst
+    // Ensure the rider exists
     const [isExisting] = await db.query(
       "SELECT 1 FROM Riders WHERE RiderID = ?",
       [RiderID]
     );
     
-    // If the person doesn't exist, return an error
+    // If the rider doesn't exist, return an error
     if (isExisting.length === 0) {
-      return res.status(404).send("Person not found");
+      return res.status(404).send("Rider not found");
     }
 
-  // Delete the person from bsg_people
+  // Delete the rider from Riders table
     await db.query("DELETE FROM Riders WHERE RiderID = ?", [RiderID]);
     
 

@@ -5,10 +5,9 @@ import { useEffect, useState } from 'react';
 
 
 function HorseShows() {
-        // useState hook to initialize the diagnosticData state variable to store the fetched data
         const [horseShowsData, setHorseShowData] = useState([]);
   
-        // Define a function to fetch diagnostic data from the API
+        // Fetch data functions
         const fetchHorseShowData = async () => {
           try {
             // Construct the URL for the API call
@@ -26,7 +25,7 @@ function HorseShows() {
           }
         };
       
-        // useEffect hook to trigger the fetchDiagnosticData function when the component mounts
+        // useEffect hook to trigger fetching horse show data
         useEffect(() => {
           fetchHorseShowData();
         }, []);

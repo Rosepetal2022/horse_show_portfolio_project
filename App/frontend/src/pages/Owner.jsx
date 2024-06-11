@@ -6,11 +6,10 @@ import { useEffect, useState } from 'react';
 
 
 function Owner() {
-     // useState hook to initialize the diagnosticData state variable to store the fetched data
      const [ownerData, setOwnerData] = useState([]);
      
 
-     // Define a function to fetch diagnostic data from the API
+     // Define a function owner data
      const fetchOwnerData = async () => {
        try {
          // Construct the URL for the API call
@@ -28,7 +27,7 @@ function Owner() {
        }
      };
    
-     // useEffect hook to trigger the fetchDiagnosticData function when the component mounts
+     // useEffect hook to trigger the fetching owner data when component mounts
      useEffect(() => {
        fetchOwnerData();
      }, []);

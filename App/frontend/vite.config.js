@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import dotenv from 'dotenv'
+// This code was used from the starter guide provided from Oregon State University
 
 dotenv.config()
 

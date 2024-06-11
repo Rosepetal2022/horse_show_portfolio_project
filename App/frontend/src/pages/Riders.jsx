@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 function Rider() {
     const [riderData, setRiderData] = useState([]);
   
-        // Define a function to fetch diagnostic data from the API
+        // Define a function to fetch horse data from API
         const fetchHorseData = async () => {
           try {
             // Construct the URL for the API call
@@ -24,7 +24,7 @@ function Rider() {
           }
         };
       
-        // useEffect hook to trigger the fetchDiagnosticData function when the component mounts
+        // useEffect hook to trigger the fetching horse data when component mounts
         useEffect(() => {
           fetchHorseData();
         }, []);
