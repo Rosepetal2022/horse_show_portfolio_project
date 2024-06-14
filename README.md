@@ -31,14 +31,15 @@ npm install vite
 npm install cors
 npm install dotenv
 
-Usase 
-In order to use this app you will need to create a .env for both the backend and the frontend of the server.
-The backend will need to include
+Usage:
+You will need to edit the ports in the backend and frontend. The vite port needs to be different then the backend port.
+Then you will need to start a local MySql instance on your computer and enter the db name and password in the backend server.
+Finally run npm start for the backend server
 
 Start the frontend server:
 
 npm start
-Access the application in your web browser at http://localhost:3000.
+Access the application in your web browser at http://localhost:PORT.
 
 
 This project is licensed under the MIT License.
