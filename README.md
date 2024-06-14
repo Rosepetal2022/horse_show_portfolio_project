@@ -23,9 +23,18 @@ git clone <repository-url>
 Navigate to the project directory:
 
 Install dependencies:
-npm install
+npm install mysql
+npm install react
+npm install express
+npm install axios
+npm install vite
+npm install cors
+npm install dotenv
 
-Usage
+Usase 
+In order to use this app you will need to create a .env for both the backend and the frontend of the server.
+The backend will need to include
+
 Start the frontend server:
 
 npm start
