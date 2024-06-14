@@ -35,10 +35,10 @@ Usage:
 You will need to edit the ports in the backend and frontend. The vite port needs to be different then the backend port.
 Then you will need to start a local MySql instance on your computer and enter the db name and password in the backend server.
 Finally run npm start for the backend server
-
 Start the frontend server:
 
-npm start
+npm start 
+
 Access the application in your web browser at http://localhost:PORT.
 
 
