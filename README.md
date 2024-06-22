@@ -42,4 +42,8 @@ npm start
 Access the application in your web browser at http://localhost:PORT.
 
 
+Here are some screenshots of the web application so if you wish for a preview you don't have to run the application locally: 
+
+
+
 This project is licensed under the MIT License.
