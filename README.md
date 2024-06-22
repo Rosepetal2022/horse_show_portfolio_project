@@ -44,6 +44,14 @@ Access the application in your web browser at http://localhost:PORT.
 
 Here are some screenshots of the web application so if you wish for a preview you don't have to run the application locally: 
 
+HomePage:
+![HomePage.JPG](https://github.com/Rosepetal2022/horse_show_portfolio_project/blob/main/Screenshots/Homepage.PNG)
+
+Riders Page:
+![RidersPage.JPG](https://github.com/Rosepetal2022/horse_show_portfolio_project/blob/main/Screenshots/RidersPage.PNG)
+
+Horse Shows Page:
+![HorseShowsPage.PNG](https://github.com/Rosepetal2022/horse_show_portfolio_project/blob/main/Screenshots/HorseShowsPage.PNG)
 
 
 This project is licensed under the MIT License.
